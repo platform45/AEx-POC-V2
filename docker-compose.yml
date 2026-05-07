@@ -26,22 +26,5 @@ services:
       db:
         condition: service_healthy
 
-  app:
-    build: ./app
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./app/.env.example
-    depends_on:
-      - backend
-
-  nginx:
-    build: ./nginx
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-      - app
-
 volumes:
   pgdata:

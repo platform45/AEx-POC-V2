@@ -69,8 +69,14 @@ aex_rag/
 │   ├── nginx.conf                # /api → backend:8000, / → app:3000
 │   └── Dockerfile
 │
+├── db/
+│   ├── schema.sql                # Table definitions, pgvector extension, indexes
+│   ├── seed.sql                  # Development seed data (8 telecoms cases)
+│   └── schema.dbml               # DBML schema for dbdiagram.io
+│
 ├── context/                      # Project context documents
 ├── docker-compose.yml
+├── .gitignore
 └── .env.example
 ```
 
@@ -110,29 +116,21 @@ NEXT_PUBLIC_API_URL=http://localhost
 docker compose up --build
 ```
 
-This starts four services:
+This starts two services:
 
 | Service | Port | Description |
 |---|---|---|
 | `db` | 5432 | Postgres + pgvector |
 | `backend` | 8000 | FastAPI API |
-| `app` | 3000 | Next.js frontend |
-| `nginx` | 80 | Reverse proxy |
 
-The application is available at `http://localhost`.
+The API is available at `http://localhost:8000`.
 
-### 3. Run database migrations
+> **Database initialisation** — on first boot, Postgres automatically runs `db/schema.sql` (creates tables and indexes) followed by `db/seed.sql` (loads development data). No manual migration step is needed. If you need a clean slate, run `docker compose down -v` to destroy the volume, then `docker compose up` again.
 
-Once the stack is up, apply migrations in a separate terminal:
+### 3. Verify
 
 ```bash
-docker compose exec backend alembic upgrade head
-```
-
-### 4. Verify
-
-```bash
-curl http://localhost/api/v1/health
+curl http://localhost:8000/health
 # {"status":"ok"}
 ```
 
@@ -197,3 +195,9 @@ retrieve → suggest → [interrupt: human review] → execute
 4. **execute** — approved actions are sent to NMS/ZMS
 
 Results are written back to the vector DB after execution.
+
+
+## Testing endpoints
+
+Can be done on `http://localhost:8000/docs` 
+
