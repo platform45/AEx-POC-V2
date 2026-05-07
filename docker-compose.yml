@@ -1,0 +1,46 @@
+services:
+  db:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aex_rag
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env.example
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    build: ./app
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./app/.env.example
+    depends_on:
+      - backend
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - app
+
+volumes:
+  pgdata:
