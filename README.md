@@ -201,3 +201,19 @@ Results are written back to the vector DB after execution.
 
 Can be done on `http://localhost:8000/docs` 
 
+
+## Testing Frontend
+
+cd app
+cp .env.example .env.local
+
+# set NEXT_PUBLIC_API_URL=http://localhost:8000 in .env.local
+npm run dev
+
+
+### Frontend Troubleshooting 
+If styling doesn't seem to appear:
+```
+rm -rf .next
+npm run dev 
+```

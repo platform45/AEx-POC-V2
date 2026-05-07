@@ -28,6 +28,12 @@ export interface CaseResponse {
   raw_context: Record<string, unknown>;
 }
 
+export interface QueryResponse {
+  answer: string;
+  sql: string | null;
+  data: Record<string, unknown>[] | null;
+}
+
 export function getHealth(): Promise<HealthResponse> {
   return fetchAPI<HealthResponse>("/health");
 }
@@ -38,4 +44,11 @@ export function getDiagnostics(deviceId: string): Promise<DiagnosticResponse> {
 
 export function getCases(): Promise<{ cases: CaseResponse[] }> {
   return fetchAPI<{ cases: CaseResponse[] }>("/cases/");
+}
+
+export function postQuery(question: string): Promise<QueryResponse> {
+  return fetchAPI<QueryResponse>("/query/", {
+    method: "POST",
+    body: JSON.stringify({ question }),
+  });
 }
