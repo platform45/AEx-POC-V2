@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -80,5 +80,37 @@ async def get_case(case_id: UUID, db: AsyncSession = Depends(get_db)):
         title=case.title,
         description=case.description,
         raw_context=case.raw_context or {},
+        created_at=case.created_at,
+    )
+
+
+class OutcomeUpdate(BaseModel):
+    outcome: Literal["resolved", "unresolved", "escalated"]
+
+
+@router.patch("/{case_id}/outcome", response_model=CaseResponse)
+async def update_outcome(
+    case_id: UUID,
+    payload: OutcomeUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(CaseContext).where(CaseContext.id == case_id)
+    )
+    case = result.scalar_one_or_none()
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+
+    updated_context = {**(case.raw_context or {})}
+    updated_context["outcome"] = payload.outcome
+    case.raw_context = updated_context
+
+    await db.commit()
+    await db.refresh(case)
+    return CaseResponse(
+        id=str(case.id),
+        title=case.title,
+        description=case.description,
+        raw_context=case.raw_context,
         created_at=case.created_at,
     )
