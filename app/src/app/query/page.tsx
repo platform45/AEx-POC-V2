@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { postQuery } from "@/lib/api";
 import type { QueryResponse } from "@/lib/api";
 
@@ -79,9 +81,77 @@ function AssistantMessage({ response }: { response: QueryResponse }) {
       <AExIcon />
 
       <div className="flex-1 space-y-3 min-w-0">
-        {/* Plain-language answer */}
+        {/* Markdown-rendered answer */}
         <div className="bg-white rounded-2xl rounded-tl-sm border border-gray-200 shadow-sm px-4 py-3 text-sm text-gray-800 leading-relaxed">
-          {response.answer}
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              // Headings
+              h1: ({ children }) => (
+                <h1 className="text-base font-bold text-gray-900 mb-2 mt-1">{children}</h1>
+              ),
+              h2: ({ children }) => (
+                <h2 className="text-sm font-bold text-gray-900 mb-2 mt-3">{children}</h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="text-sm font-semibold text-gray-800 mb-1.5 mt-2">{children}</h3>
+              ),
+              // Paragraphs
+              p: ({ children }) => (
+                <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>
+              ),
+              // Bold and italic
+              strong: ({ children }) => (
+                <strong className="font-semibold text-gray-900">{children}</strong>
+              ),
+              em: ({ children }) => (
+                <em className="italic text-gray-700">{children}</em>
+              ),
+              // Bullet and numbered lists
+              ul: ({ children }) => (
+                <ul className="list-disc list-inside space-y-1 mb-2 pl-1">{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="list-decimal list-inside space-y-1 mb-2 pl-1">{children}</ol>
+              ),
+              li: ({ children }) => (
+                <li className="text-gray-700">{children}</li>
+              ),
+              // Inline code
+              code: ({ children }) => (
+                <code className="bg-gray-100 text-blue-700 rounded px-1 py-0.5 text-xs font-mono">
+                  {children}
+                </code>
+              ),
+              // GFM tables
+              table: ({ children }) => (
+                <div className="overflow-x-auto my-2 rounded-lg border border-gray-200">
+                  <table className="w-full text-xs">{children}</table>
+                </div>
+              ),
+              thead: ({ children }) => (
+                <thead className="bg-gray-50 border-b border-gray-200">{children}</thead>
+              ),
+              th: ({ children }) => (
+                <th className="px-3 py-2 text-left font-semibold text-gray-600 uppercase tracking-wider">
+                  {children}
+                </th>
+              ),
+              td: ({ children }) => (
+                <td className="px-3 py-2 text-gray-700 border-t border-gray-100">{children}</td>
+              ),
+              // Horizontal rule
+              hr: () => <hr className="border-gray-200 my-3" />,
+              // Blockquote
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-2 border-blue-400 pl-3 text-gray-600 italic my-2">
+                  {children}
+                </blockquote>
+              ),
+            }}
+          >
+            {response.answer}
+          </ReactMarkdown>
         </div>
 
         {/* SQL block with dark code theme */}
