@@ -14,7 +14,7 @@ Table case_contexts {
   id          uuid        [pk, default: `uuid_generate_v4()`, note: 'Unique case identifier']
   title       varchar(255) [not null, note: 'Short descriptive title of the network issue']
   description text         [not null, note: 'Full narrative of the issue, diagnosis, and resolution']
-  embedding   vector(1536) [note: 'Semantic embedding for pgvector similarity search (1536-dim)']
+  embedding   vector(1024) [note: 'Semantic embedding for pgvector similarity search (voyage-4, 1024-dim)']
   raw_context jsonb        [not null, default: '{}', note: 'Structured diagnostic payload – see shape below']
   created_at  timestamptz  [not null, default: `now()`]
 

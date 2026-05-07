@@ -1,9 +1,11 @@
-from sqlalchemy import select, text
+from sqlalchemy import select
 from app.db.session import AsyncSessionLocal
 from app.db.models import CaseContext
+from app.services.embedding import get_embedding
 
 
-async def search_similar_cases(embedding: list[float], limit: int = 5) -> list[dict]:
+async def search_similar_cases(query: str, limit: int = 5) -> list[dict]:
+    embedding = await get_embedding(query, input_type="query")
     async with AsyncSessionLocal() as session:
         result = await session.execute(
             select(CaseContext)

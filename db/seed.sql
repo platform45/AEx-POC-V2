@@ -8,7 +8,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'OLT Port Link Down – Damaged Fiber Connector',
   'Fiber link on OLT-CPT-001 port 0/1/3 dropped. OTDR pinpointed a reflection event at 340 m indicating a damaged connector at the splice box outside Building A. Re-terminating the connector restored full signal.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "OLT-CPT-001",
@@ -41,7 +41,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'ONT Authentication Failure – LOID Mismatch After Config Push',
   'Following a bulk config push, 12 ONTs on OLT-JHB-003 failed to authenticate. Investigation revealed the LOID values in ZMS were overwritten with template defaults. Restoring the correct LOIDs resolved authentication for all affected ONTs.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "OLT-JHB-003",
@@ -73,7 +73,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'High Packet Loss on ONU – SNR Degradation from Fiber Bend',
   'Customers on PON port 0/0/7 of OLT-DBN-002 reported intermittent packet loss peaking at 18%. SNR measurement showed a 4 dB drop traced to a tight fiber bend introduced during recent cabinet maintenance.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "OLT-DBN-002",
@@ -108,7 +108,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'BGP Session Drop to Upstream Transit Provider',
   'BGP session to upstream transit provider AS65001 dropped, causing a partial routing blackhole for 200+ subscribers. Root cause was an expired MD5 authentication password that had not been rotated in line with the quarterly security policy.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "CORE-RTR-CPT-01",
@@ -141,7 +141,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'Fiber Cut – Buried Cable Damage During Civil Works',
   'A civil contractor struck a buried feeder cable during road works, severing a 24-fibre cable and taking down 3 OLT ports serving 126 subscribers. A temporary aerial bypass was deployed within 4 hours while permanent repairs were scheduled.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "OLT-CPT-002",
@@ -177,7 +177,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'Access Switch Port Flapping – Duplex Mismatch on Uplink',
   'An access switch uplink port was flapping every 30–90 seconds, causing periodic connectivity drops for an entire office block. The port was auto-negotiating while the upstream distribution switch had the uplink hard-coded to full-duplex 1G.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "ACC-SW-BLK7-01",
@@ -209,7 +209,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'ONU Low Rx Power – Drop Cable Crimped Under Door Seal',
   'A single ONU reported persistent low rx power (-28.5 dBm) causing degraded speeds. Field inspection found the drop cable had been crimped under a metal door seal during installation, creating a micro-bend loss point.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "OLT-CPT-003",
@@ -241,7 +241,7 @@ INSERT INTO case_contexts (title, description, embedding, raw_context, created_a
 (
   'DHCP Lease Exhaustion – /24 Pool Saturated by Stale Leases',
   'Subscribers on VLAN 100 began failing to obtain IP addresses. The DHCP pool (192.168.100.0/24) was exhausted due to a misconfigured lease time of 30 days leaving stale entries from decommissioned CPEs. Clearing stale leases and reducing lease time to 24 hours resolved the issue.',
-  ARRAY(SELECT 0.0 FROM generate_series(1, 1536))::vector,
+  ARRAY(SELECT 0.0 FROM generate_series(1, 1024))::vector,
   '{
     "inputs": {
       "device_id": "BRAS-JHB-01",

@@ -1,13 +1,11 @@
 from app.agent.state import AgentState
 from app.services.vector_search import search_similar_cases
-from app.services.embedding import get_embedding
 from app.core.config import settings
 import anthropic
 
 
 async def retrieve(state: AgentState) -> AgentState:
-    embedding = await get_embedding(state["issue_description"])
-    cases = await search_similar_cases(embedding, limit=5)
+    cases = await search_similar_cases(state["issue_description"], limit=5)
     return {**state, "retrieved_cases": cases}
 
 
@@ -20,7 +18,7 @@ async def suggest(state: AgentState) -> AgentState:
     )
 
     message = await client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=1024,
         messages=[
             {

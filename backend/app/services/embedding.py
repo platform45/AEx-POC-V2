@@ -1,20 +1,25 @@
-import anthropic
+import voyageai
 from app.core.config import settings
 
-# NOTE: Anthropic does not yet expose a dedicated embeddings endpoint.
-# This uses the messages API with claude-sonnet-4-5 as a placeholder.
-# Replace with the real embedding model/endpoint once available.
+# voyage-4 outputs 1024-dimensional vectors by default.
+EMBEDDING_MODEL = "voyage-4"
+EMBEDDING_DIM = 1024
+
+_client: voyageai.AsyncClient | None = None
 
 
-async def get_embedding(text: str) -> list[float]:
-    client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+def _get_client() -> voyageai.AsyncClient:
+    global _client
+    if _client is None:
+        _client = voyageai.AsyncClient(api_key=settings.VOYAGE_API_KEY)
+    return _client
 
-    message = await client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=1,
-        messages=[{"role": "user", "content": text}],
-    )
 
-    # Placeholder: return a zero vector until a real embedding endpoint is used.
-    _ = message
-    return [0.0] * 1536
+async def get_embedding(text: str, input_type: str = "document") -> list[float]:
+    """
+    input_type="document" for content being stored,
+    input_type="query" for search queries.
+    """
+    client = _get_client()
+    result = await client.embed([text], model=EMBEDDING_MODEL, input_type=input_type)
+    return result.embeddings[0]

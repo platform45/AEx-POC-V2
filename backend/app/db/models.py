@@ -19,7 +19,7 @@ class CaseContext(Base):
     )
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    embedding: Mapped[list] = mapped_column(Vector(1536), nullable=True)
+    embedding: Mapped[list] = mapped_column(Vector(1024), nullable=True)
     raw_context: Mapped[dict] = mapped_column(JSONB, nullable=True, default=dict)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

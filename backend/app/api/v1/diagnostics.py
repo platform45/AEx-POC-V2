@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import CaseContext
 from app.db.session import get_db
-from app.services.embedding import get_embedding
 from app.services.vector_search import search_similar_cases
 
 router = APIRouter()
@@ -24,8 +23,7 @@ class DiagnosticResponse(BaseModel):
 
 @router.post("/run", response_model=DiagnosticResponse)
 async def run_diagnostic(payload: DiagnosticRequest):
-    embedding = await get_embedding(payload.issue_description)
-    similar_cases = await search_similar_cases(embedding, limit=5)
+    similar_cases = await search_similar_cases(payload.issue_description, limit=5)
     return DiagnosticResponse(
         device_id=payload.device_id,
         status="complete",

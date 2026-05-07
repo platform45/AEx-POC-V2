@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS case_contexts (
     id          UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
     title       VARCHAR(255) NOT NULL,
     description TEXT         NOT NULL,
-    -- 1536-dimensional embedding produced by the embedding service
-    embedding   VECTOR(1536),
+    -- 1024-dimensional embedding produced by Voyage AI (voyage-4)
+    embedding   VECTOR(1024),
     -- Flexible diagnostic payload: inputs, actions, results, outcome
     raw_context JSONB        NOT NULL DEFAULT '{}',
     created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
