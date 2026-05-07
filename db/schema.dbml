@@ -1,0 +1,44 @@
+// AEx RAG – database schema
+// Visualise at https://dbdiagram.io by pasting this file.
+
+Project aex_rag {
+  database_type: 'PostgreSQL'
+  Note: '''
+    AEx AI RAG platform for network diagnostics.
+    Stores resolved diagnostic cases as vector embeddings so the LangGraph
+    agent can retrieve semantically similar past cases when a new issue arrives.
+  '''
+}
+
+Table case_contexts {
+  id          uuid        [pk, default: `uuid_generate_v4()`, note: 'Unique case identifier']
+  title       varchar(255) [not null, note: 'Short descriptive title of the network issue']
+  description text         [not null, note: 'Full narrative of the issue, diagnosis, and resolution']
+  embedding   vector(1536) [note: 'Semantic embedding for pgvector similarity search (1536-dim)']
+  raw_context jsonb        [not null, default: '{}', note: 'Structured diagnostic payload – see shape below']
+  created_at  timestamptz  [not null, default: `now()`]
+
+  indexes {
+    embedding   [type: ivfflat, name: 'idx_case_contexts_embedding', note: 'ANN search, L2 distance']
+    created_at  [name: 'idx_case_contexts_created_at']
+    raw_context [type: gin, name: 'idx_case_contexts_raw_context', note: 'JSONB field queries']
+  }
+
+  Note: '''
+    raw_context JSON shape:
+    {
+      "inputs": {
+        "device_id":      string,   // e.g. "OLT-CPT-001"
+        "port":           string,   // e.g. "0/1/3"
+        "issue":          string,
+        "reported_by":    string,
+        "affected_onus":  number
+      },
+      "actions": [string, ...],     // ordered steps taken by the engineer
+      "results": {                  // measurements / observations
+        ...key: value pairs...
+      },
+      "outcome": "resolved" | "unresolved" | "escalated"
+    }
+  '''
+}
