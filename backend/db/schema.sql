@@ -27,3 +27,27 @@ CREATE INDEX IF NOT EXISTS idx_case_contexts_created_at
 -- GIN index allows efficient querying inside raw_context JSON.
 CREATE INDEX IF NOT EXISTS idx_case_contexts_raw_context
     ON case_contexts USING gin (raw_context);
+
+-- ---------------------------------------------------------------------------
+-- issue_resolve – structured record of device issues and their resolutions.
+-- Serves as a knowledge base for future agents diagnosing recurring faults.
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS issue_resolve (
+    id                     UUID         PRIMARY KEY DEFAULT uuid_generate_v4(),
+    device_id              VARCHAR(100) NOT NULL,
+    issue_description      TEXT         NOT NULL,
+    resolved               BOOLEAN      NOT NULL DEFAULT FALSE,
+    resolution_description TEXT,
+    created_at             TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    resolved_at            TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_issue_resolve_device_id
+    ON issue_resolve (device_id);
+
+CREATE INDEX IF NOT EXISTS idx_issue_resolve_resolved
+    ON issue_resolve (resolved);
+
+CREATE INDEX IF NOT EXISTS idx_issue_resolve_created_at
+    ON issue_resolve (created_at DESC);

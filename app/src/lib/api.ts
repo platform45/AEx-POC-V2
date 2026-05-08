@@ -52,3 +52,28 @@ export function postQuery(question: string): Promise<QueryResponse> {
     body: JSON.stringify({ question }),
   });
 }
+
+// Returned by every issue session endpoint. done=true signals the conversation
+// has ended; escalated=true means it ended without resolution.
+export interface SessionResponse {
+  session_id: string;
+  message: string;
+  done: boolean;
+  escalated: boolean;
+}
+
+// Creates a new issue resolution session and returns the agent's first prompt
+export function startIssueSession(): Promise<SessionResponse> {
+  return fetchAPI<SessionResponse>("/issues/session", { method: "POST" });
+}
+
+// Sends a user reply to an active session and returns the agent's next message
+export function respondToIssueSession(
+  sessionId: string,
+  input: string
+): Promise<SessionResponse> {
+  return fetchAPI<SessionResponse>(`/issues/session/${sessionId}/respond`, {
+    method: "POST",
+    body: JSON.stringify({ input }),
+  });
+}
