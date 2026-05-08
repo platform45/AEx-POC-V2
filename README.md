@@ -207,7 +207,8 @@ Can be done on `http://localhost:8000/docs`
 cd app
 cp .env.example .env.local
 
-# set NEXT_PUBLIC_API_URL=http://localhost:8000 in .env.local
+set NEXT_PUBLIC_API_URL=http://localhost:8000 in .env.local
+
 npm run dev
 
 
