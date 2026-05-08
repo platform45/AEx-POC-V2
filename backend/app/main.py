@@ -3,7 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import router as v1_router
 
-app = FastAPI(title="AEx AI API", version="1.0.0")
+# Docs are hidden
+# To enable: app = FastAPI(title="AEx AI API", version="1.0.0")
+app = FastAPI(title="AEx AI API", version="1.0.0", docs_url=None, redoc_url=None)
 
 app.add_middleware(
     CORSMiddleware,
